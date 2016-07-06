@@ -2,16 +2,16 @@
 
 ### Hello World!
 ```
-push 16
-push 0
-push 12
-push 0
-push 255
-call
-push 1
-push 255
-call
-"Hello World!"
+push 16        ; string heap index
+push 0         ; string heap segment
+push 12        ; string length
+push 0         ; print call index
+push 255       ; runtime call segment
+call           ; call print
+push 1         ; exit call index
+push 255       ; runtime call segment
+call           ; call exit
+"Hello World!" ; "Hello World!" string
 ```
 
 Instruction | Mnemonic | Op Code | Description
