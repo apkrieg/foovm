@@ -1,5 +1,10 @@
 # FooVM
 
+A Simple Bytecode Runtime
+
+### Description
+This runtime was built at part of a contest with @circle601.
+
 ### Hello World!
 ```
 push 16        ; string heap index
@@ -14,6 +19,7 @@ call           ; call exit
 "Hello World!" ; "Hello World!" string
 ```
 
+### Bytecode Reference
 Instruction | Mnemonic | Op Code | Description
 ----------- | -------- | ------- | -----------
 Nil | nil | 0x00 | Nil pointer/no-op
