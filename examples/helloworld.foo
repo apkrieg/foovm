@@ -1,0 +1,23 @@
+.segment "home"
+
+;loop
+push 1
+push 1
+load         ;load max_counter
+push 0
+push 1
+load         ;load counter
+push #
+push #
+jge          ;
+
+
+;exit
+push 0x01
+push 0xff
+call
+
+.segment "data"
+0            ;counter
+12           ;max_counter
+Hello World! ;string
