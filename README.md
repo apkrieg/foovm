@@ -3,7 +3,7 @@
 A Simple Bytecode Runtime
 
 ### Description
-This runtime was built at part of a contest with @circle601.
+This runtime was built at part of a contest with @circle601 to see which runtime could run a set of example applications the fastest.
 
 ### Hello World!
 ```
