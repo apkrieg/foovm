@@ -34,7 +34,6 @@ type FooVM struct {
 	RSP   uint16
 	Stack []byte
 	// 64 KB Heap
-	PHP  uint16
 	RHP  uint16
 	Heap []byte
 }
@@ -43,12 +42,13 @@ func New() *FooVM {
 	fvm := new(FooVM)
 	fvm.Stack = make([]byte, 256)
 	fvm.Heap = make([]byte, 256*256)
+	fvm.Heap[65024] = 1
 	return fvm
 }
 
 func PrintDebug(fvm *FooVM) {
 	fmt.Println("\n\nDebug:")
-	fmt.Printf("RSP=%#x, RHP=%#x, PHP=%#x\n", fvm.RSP, fvm.RHP, fvm.PHP)
+	fmt.Printf("RSP=%#x, RHP=%#x", fvm.RSP, fvm.RHP)
 	fmt.Println("Stack:")
 	for i, v := range fvm.Stack {
 		if i%16 == 0 && i != 0 {
@@ -64,7 +64,7 @@ func PrintDebug(fvm *FooVM) {
 		if i%256 == 0 && i != 0 {
 			fmt.Println("-----")
 		}
-		if i == 5*256 {
+		if i == 8*256 {
 			break
 		}
 		fmt.Printf("%#x ", v)
@@ -86,7 +86,7 @@ func (fvm *FooVM) Exec() {
 			break
 		case inst == Pop:
 			fvm.RSP--
-			fvm.RHP--
+			fvm.RHP++
 			break
 		case inst == Load:
 			fvm.Stack[fvm.RSP] = fvm.Heap[uint16(fvm.Stack[fvm.RSP-1])*256+uint16(fvm.Stack[fvm.RSP-2])]
@@ -119,7 +119,8 @@ func (fvm *FooVM) Exec() {
 			fvm.RHP++
 			break
 		case inst == Call:
-			fvm.PHP = fvm.RHP
+			fvm.Heap[65024+uint16(fvm.Heap[65024])] = byte(fvm.RHP>>8)
+			fvm.Heap[65025+uint16(fvm.Heap[65025])] = byte(fvm.RHP)
 			if fvm.Stack[fvm.RSP-1] == 0xff {
 				if fvm.Stack[fvm.RSP-2] == 0x00 {
 					temp := uint16(fvm.Stack[fvm.RSP-4])*256 + uint16(fvm.Stack[fvm.RSP-5])
@@ -137,7 +138,9 @@ func (fvm *FooVM) Exec() {
 			}
 			break
 		case inst == Ret:
-			fvm.RHP = fvm.PHP
+			fvm.RHP = uint16(fvm.Heap[65024+uint16(fvm.Heap[65024])])
+			fvm.RHP<<=8
+			fvm.RHP = uint16(fvm.Heap[65025+uint16(fvm.Heap[65025])])
 			fvm.RHP++
 			break
 		case inst == Jmp:
