@@ -8,13 +8,10 @@ push 12
 push 0
 push 255
 call
-push 29
-push 0
-jmp
-"Hello World!"
 push 1
 push 255
 call
+"Hello World!"
 ```
 
 Instruction | Mnemonic | Op Code | Description
