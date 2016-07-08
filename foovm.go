@@ -30,6 +30,8 @@ const (
 type FooVM struct {
 	Cmp1 byte
 	Cmp2 byte
+	// Ret Array
+	Rets []uint16
 	// 256 B Stack
 	RSP   uint16
 	Stack []byte
@@ -40,16 +42,16 @@ type FooVM struct {
 
 func New() *FooVM {
 	fvm := new(FooVM)
+	fvm.Rets = make([]uint16, 0)
 	fvm.Stack = make([]byte, 256)
 	fvm.Heap = make([]byte, 256*256)
-	fvm.Heap[65024] = 1
 	return fvm
 }
 
 func PrintDebug(fvm *FooVM) {
 	fmt.Println("\n\nDebug:")
 	fmt.Printf("RSP=%#x, RHP=%#x", fvm.RSP, fvm.RHP)
-	fmt.Println("Stack:")
+	fmt.Println("\n\nStack:")
 	for i, v := range fvm.Stack {
 		if i%16 == 0 && i != 0 {
 			fmt.Println("")
@@ -74,6 +76,7 @@ func PrintDebug(fvm *FooVM) {
 
 // Execute bytecode
 func (fvm *FooVM) Exec() {
+	defer PrintDebug(fvm)
 	for {
 		switch inst := fvm.Heap[fvm.RHP]; {
 		case inst == Nil:
@@ -119,17 +122,16 @@ func (fvm *FooVM) Exec() {
 			fvm.RHP++
 			break
 		case inst == Call:
-			fvm.Heap[65024+uint16(fvm.Heap[65024])] = byte(fvm.RHP>>8)
-			fvm.Heap[65025+uint16(fvm.Heap[65025])] = byte(fvm.RHP)
+			fvm.Rets = append(fvm.Rets, fvm.RHP)
 			if fvm.Stack[fvm.RSP-1] == 0xff {
-				if fvm.Stack[fvm.RSP-2] == 0x00 {
+				if fvm.Stack[fvm.RSP-2] == 0x00 { // Print
 					temp := uint16(fvm.Stack[fvm.RSP-4])*256 + uint16(fvm.Stack[fvm.RSP-5])
 					for _, v := range fvm.Heap[temp : temp+uint16(fvm.Stack[fvm.RSP-3])] {
 						fmt.Printf("%c", v)
 					}
 					fvm.RSP -= 5
 					fvm.RHP++
-				} else if fvm.Stack[fvm.RSP-2] == 0x01 {
+				} else if fvm.Stack[fvm.RSP-2] == 0x01 { // Exit
 					return
 				}
 			} else {
@@ -138,9 +140,8 @@ func (fvm *FooVM) Exec() {
 			}
 			break
 		case inst == Ret:
-			fvm.RHP = uint16(fvm.Heap[65024+uint16(fvm.Heap[65024])])
-			fvm.RHP<<=8
-			fvm.RHP = uint16(fvm.Heap[65025+uint16(fvm.Heap[65025])])
+			fvm.RHP = fvm.Rets[len(fvm.Rets)-1]
+			fvm.Rets = fvm.Rets[0:len(fvm.Rets)-1]
 			fvm.RHP++
 			break
 		case inst == Jmp:
