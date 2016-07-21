@@ -15,13 +15,9 @@ var (
 		fvm.Push, 1,
 		fvm.Push, 255,
 		fvm.Call,
+		'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!',
 	}
 )
-
-func init() {
-	// Get the Program ready
-	Program = append(Program, []byte("Hello World!"))
-}
 
 func main() {
 	vm := fvm.New()
