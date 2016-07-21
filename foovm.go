@@ -76,7 +76,6 @@ func PrintDebug(fvm *FooVM) {
 
 // Execute bytecode
 func (fvm *FooVM) Exec() {
-	defer PrintDebug(fvm)
 	for {
 		switch inst := fvm.Heap[fvm.RHP]; {
 		case inst == Nil:
