@@ -5,7 +5,9 @@ A Simple Bytecode Runtime
 `go get github.com/apkrieg/foovm`
 
 ### Description
-This runtime was built at part of a contest with @circle601 to see which runtime could run a set of example applications the fastest.
+This runtime was built at part of a contest with [circle601](https://github.com/circle601) to see which runtime could run a set of example applications the fastest.
+
+This runtime was the winner as it was the only runtime that could pass all the tests.
 
 ### Hello World!
 ```
