@@ -27,8 +27,8 @@ call           ; call exit
 Instruction | Mnemonic | Op Code | Description
 ----------- | -------- | ------- | -----------
 Nil | nil | 0x00 | Nil pointer/no-op
-Push | push | 0x01 | Push data onto stack
-Pop | pop | 0x02 | Pop data off of stack
+Push | push | 0x01 | *stack* <- data
+Pop | pop | 0x02 | <- *stack*
 Load | load | 0x03 | Load data from heap to stack
 Store | store | 0x04 | store data from stack to heap
 Add | add | 0x05 | Add pop1 + pop2
