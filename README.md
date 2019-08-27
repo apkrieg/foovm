@@ -9,6 +9,10 @@ This runtime was built at part of a contest with [circle601](https://github.com/
 
 This runtime was the winner as it was the only runtime that could pass all the tests.
 
+### Update
+
+This project hasn't been updated in a while and I don't think I will update it. I've kinda stepped away from Go because I don't like what Google has been doing with the language. I've started to use Rust more and more as my daily driver and have started development on FizzVM which is written in Rust and Assembly.
+
 ### Hello World!
 ```
 push 16        ; string heap index
